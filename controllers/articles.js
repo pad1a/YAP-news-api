@@ -27,7 +27,7 @@ const createArticles = (req, res, next) => {
 };
 
 const deleteArticles = (req, res, next) => {
-  Article.findById(req.params.articleId)
+  Article.findById(req.params.articleId).select('+owner')
   // eslint-disable-next-line consistent-return
     .then((article) => {
       if (!article) {
