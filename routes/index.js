@@ -1,4 +1,4 @@
-// routes/routes.js
+// routes/index.js
 
 const router = require('express').Router();
 const usersRouter = require('./user');

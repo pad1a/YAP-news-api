@@ -2,14 +2,14 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const express = require('express');
 require('dotenv').config();
+const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const { Joi, celebrate, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
-const routes = require('./routes/routes.js');
+const routes = require('./routes');
+const { signInRouter, signUpRouter } = require('./routes/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { ErrorMiddleware } = require('./middlewares/error');
-const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -27,22 +27,8 @@ app.use(cookieParser());
 
 app.use(helmet());
 app.use(requestLogger);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-    name: Joi.string().required().min(2).max(30),
-  }),
-}), createUser);
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), login);
-
+app.use('/', signUpRouter);
+app.use('/', signInRouter);
 // защитили все роуты кроме создания юзера и логина
 app.use(auth);
 app.use('/', routes);
@@ -51,8 +37,5 @@ app.use(errorLogger);
 app.use(errors());
 app.use(ErrorMiddleware);
 
-// слушаем сервер при каждом обращении
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`App listening on port ${PORT}`);
 });
