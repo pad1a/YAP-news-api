@@ -1,4 +1,5 @@
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const express = require('express');
 require('dotenv').config();
@@ -14,6 +15,11 @@ const { ErrorMiddleware } = require('./middlewares/error');
 const { PORT = 3000 } = process.env;
 const app = express();
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
 mongoose.connect('mongodb://localhost:27017/yapdiplom', {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -24,9 +30,10 @@ mongoose.connect('mongodb://localhost:27017/yapdiplom', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+app.use(limiter);
 app.use(helmet());
 app.use(requestLogger);
+
 app.use('/', signUpRouter);
 app.use('/', signInRouter);
 // защитили все роуты кроме создания юзера и логина

@@ -17,7 +17,6 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-// eslint-disable-next-line consistent-return
 const createUser = (req, res, next) => {
   const {
     email, password, name,
