@@ -8,18 +8,18 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const auth = require('./middlewares/auth');
 const routes = require('./routes');
-const { signInRouter, signUpRouter } = require('./routes/auth');
+const { signInRouter, signUpRouter, signOutRouter } = require('./routes/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { ErrorMiddleware } = require('./middlewares/error');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
-const limiter = rateLimit({
+/*const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
-
+*/
 mongoose.connect('mongodb://localhost:27017/yapdiplom', {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -30,12 +30,14 @@ mongoose.connect('mongodb://localhost:27017/yapdiplom', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(limiter);
+//app.use(limiter);
 app.use(helmet());
 app.use(requestLogger);
 
 app.use('/', signUpRouter);
 app.use('/', signInRouter);
+app.use('/', signOutRouter);
+
 // защитили все роуты кроме создания юзера и логина
 app.use(auth);
 app.use('/', routes);

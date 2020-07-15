@@ -17,6 +17,18 @@ const NotFoundError = require('../errors/not-found-err');
     .catch(next);
 };*/
 
+const getLogout = ('/logout', (req, res, next) => {
+  res.cookie("userId","",{
+    path:"/",
+    maxAge:-1
+  })
+  res.json({
+    status:"0",
+    msg:"",
+    result:""
+  })
+});
+
 const getUsers = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)

@@ -4,6 +4,7 @@ const usersRouter = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
 const auth = require('../middlewares/auth');
 const { getUsers } = require('../controllers/users');
+// const { getLogout } = require('../controllers/users');
 
 // GET
 // usersRouter.get('/me', getUsers);

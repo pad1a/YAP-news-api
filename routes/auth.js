@@ -1,5 +1,6 @@
 const signInRouter = require('express').Router();
 const signUpRouter = require('express').Router();
+const signOutRouter = require('express').Router();
 const { Joi, celebrate } = require('celebrate');
 const { login, createUser } = require('../controllers/users');
 
@@ -17,4 +18,16 @@ signInRouter.post('/signin', celebrate({
   }),
 }), login);
 
-module.exports = { signInRouter, signUpRouter };
+signOutRouter.post('/signout', (req, res, next) => {
+  res.cookie('jwt', '', {
+    path: '/',
+    signed: false,
+    maxAge: -1,
+    expires: new Date(0),
+  });
+  res.json({
+    msg: 'ok',
+  });
+});
+
+module.exports = { signInRouter, signUpRouter, signOutRouter };

@@ -7,6 +7,8 @@ const NotFoundError = require('../errors/not-found-err');
 
 router.use('/users', usersRouter);
 router.use('/articles', articlesRouter);
+// router.use('/logout', usersRouter);
+
 router.all('*', () => {
   throw new NotFoundError('Такой ресурс не доступен');
 });
