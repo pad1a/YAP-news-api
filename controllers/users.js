@@ -10,11 +10,21 @@ const BadReqError = require('../errors/bad-req-err');
 const ConflictError = require('../errors/conflict-err');
 const NotFoundError = require('../errors/not-found-err');
 
-const getUsers = (req, res, next) => {
+/*const getUsers = (req, res, next) => {
   User.find({})
     .populate('user')
-    .then((users) => res.send({ data: users }))
+    .then((user) => res.send({ data: user }))
     .catch(next);
+};*/
+
+const getUsers = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .orFail(() => new NotFoundError(msgUserNotFound));
+    return res.send(user);
+  } catch (err) {
+    return next(err);
+  }
 };
 
 const createUser = (req, res, next) => {
