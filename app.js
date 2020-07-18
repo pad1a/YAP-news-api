@@ -2,6 +2,7 @@ const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const express = require('express');
+const cors = require('cors')
 require('dotenv').config();
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
@@ -14,8 +15,14 @@ const { ErrorMiddleware } = require('./middlewares/error');
 
 const { PORT = 3000 } = process.env;
 const app = express();
+const corsOptions = {
+  origin: '*',
+  // optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true,
+};
 
-/*const limiter = rateLimit({
+app.use(cors(corsOptions));
+/* const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });

@@ -10,29 +10,18 @@ const BadReqError = require('../errors/bad-req-err');
 const ConflictError = require('../errors/conflict-err');
 const NotFoundError = require('../errors/not-found-err');
 
-/*const getUsers = (req, res, next) => {
+/* const getUsers = (req, res, next) => {
   User.find({})
     .populate('user')
     .then((user) => res.send({ data: user }))
     .catch(next);
-};*/
-
-const getLogout = ('/logout', (req, res, next) => {
-  res.cookie("userId","",{
-    path:"/",
-    maxAge:-1
-  })
-  res.json({
-    status:"0",
-    msg:"",
-    result:""
-  })
-});
+};
+*/
 
 const getUsers = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
-      .orFail(() => new NotFoundError(msgUserNotFound));
+      .orFail(() => new NotFoundError('Пользователь не найден'));
     return res.send(user);
   } catch (err) {
     return next(err);
@@ -67,7 +56,7 @@ const createUser = (req, res, next) => {
     .catch(next);
 };
 
-const login = (req, res, next) => {
+/* const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByEmail(email, password)
     .then((user) => {
@@ -80,14 +69,29 @@ const login = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
-          sameSite: true,
+          // sameSite: true,
         })
         .send({ message: 'Успешная авторизация' });
     })
     .catch(next);
 };
-
-
+ */
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const userlogin = await User.findUserByEmail(email, password);
+    const token = jwt.sign({ _id: userlogin._id }, JWT_SECRET || 'dev-secret',
+      { expiresIn: '7d' });
+    res.cookie('jwt', token, {
+      maxAge: 3600000 * 24 * 7,
+      httpOnly: true,
+      // domain: 'https://api.0911.ru',
+    });
+    return res.send({ token });
+  } catch (err) {
+    return next(err);
+  }
+};
 
 module.exports = {
   getUsers, createUser, login,
