@@ -15,14 +15,15 @@ const { ErrorMiddleware } = require('./middlewares/error');
 
 const { PORT = 3000 } = process.env;
 const app = express();
+
 const corsOptions = {
-  origin: '*',
-  // optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin:['https://0911.ru', 'http://localhost:8080'],
   credentials: true,
 };
 
+
 app.use(cors(corsOptions));
-/* const limiter = rateLimit({
+/*const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
