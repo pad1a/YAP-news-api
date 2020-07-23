@@ -6,12 +6,14 @@ const NotFoundError = require('../errors/not-found-err');
 const ForBidError = require('../errors/for-bid-err');
 
 const getArticles = (req, res, next) => {
-  Article.find({})
+  const userId = req.user._id;
+  Article.find({ owner: userId })
     .then((articles) => {
       res.send({ data: articles });
     })
     .catch(next);
 };
+
 
 const createArticles = (req, res, next) => {
   const {
