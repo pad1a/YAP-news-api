@@ -17,7 +17,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 const corsOptions = {
-  origin:['https://0911.ru', 'http://localhost:8080'],
+  origin:['https://0911.ru', 'http://localhost:8080', 'https://pad1a.github.io/YAP-news-front'],
   credentials: true,
 };
 
