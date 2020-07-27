@@ -19,12 +19,14 @@ signInRouter.post('/signin', celebrate({
 }), login);
 
 signOutRouter.post('/signout', (req, res, next) => {
-  res.cookie('jwt', '', {
+  res.clearCookie('jwt');
+  /* res.cookie('jwt', '', {
     path: '/',
     signed: false,
     maxAge: -1,
     expires: new Date(0),
   });
+  */
   res.json({
     msg: 'ok',
   });
